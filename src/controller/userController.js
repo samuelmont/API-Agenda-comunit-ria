@@ -1,49 +1,78 @@
 require("../models/userModel.js");
-const mongoose = require("mongoose");
-const Users = mongoose.model("Users");
+const jwt = require("jsonwebtoken");
+const User = require("../models/userModel");
 
-exports.logUser = async (req, res) => {
-    try {
-        
-        Users.find().lean().then((users) => {
-            res.json({ resposta: "Usuarios" })
-            console.log('Users:', users)
-        });
-    } catch (err) {
-        res.status(500).json({ message: "Erro." });
+exports.login = async (req, res) => {
+  try {
+    const user = new User(req.body);
+    await user.login();
+
+    if (user.errors.length > 0) {
+      res.status(401).json({ errors: user.errors }); // mostra o erro
+      return;
     }
+
+    const id = user.user._id;
+    const email = user.user.email;
+
+    const token = jwt.sign({ id, email }, process.env.TOKEN_SECRET, {
+      expiresIn: process.env.TOKEN_EXPIRATION,
+    });
+    console.log("Entrou");
+    return res.status(201).json({ token: token });
+  } catch (e) {
+    console.log(e);
+    return res.status(400).json({ errors: [e] });
+  }
 };
 
-exports.createUser = async (req, res) => {
-    try {
-        const { name, email, contact_number, password } = req.body;
-        const user = new Users({ name, email, contact_number, password });
-        console.log(user);
-        await user.save();
-        res.json(user);
-    } catch (err) {
-        res.status(500).json({ message: "Erro." });
+exports.register = async (req, res) => {
+  try {
+    const user = new User(req.body);
+    await user.register();
+
+    if (user.errors.length > 0) {
+      res.status(401).json({ errors: user.errors }); // Retorna os erros
+      return;
     }
+    console.log("Resgitrou");
+    return res.status(201).json({ success: 'Conta cadastrada com sucesso' }); // Cadastrou
+  } catch (e) {
+    console.log(e);
+    return res.status(400).json({ errors: [e] });
+  }
 };
 
-exports.updateUsers = async (req, res) => {
-    try {
-        Users.find().lean().then((users) => {
-            res.json({ resposta: "Usuarios" })
-            console.log('Users:', users)
-        });
-    } catch (err) {
-        res.status(500).json({ message: "Erro." });
+exports.update = async (req, res) => {
+  try {
+    req.body.idToken = req.userId;
+
+    const user = new User(req.body);
+    await user.update();
+
+    if (user.errors.length > 0) {
+      res.status(401).json({ errors: user.errors }); // Retorna os erros
+      return;
     }
+    console.log("Atualizou");
+    return res.json({ success: "Dados atualizados com sucesso" });
+  } catch (e) {
+    return res.status(400).json({ errors: [e] });
+  }
 };
 
-exports.deleteUsers = async (req, res) => {
-    try {
-        Users.find().lean().then((users) => {
-            res.json({ resposta: "Usuarios" })
-            console.log('Users:', users)
-        });
-    } catch (err) {
-        res.status(500).json({ message: "Erro." });
+exports.delete = async (req, res) => {
+  try {
+    const user = new User(req.userId);
+    await user.delete();
+
+    if (user.errors.length > 0) {
+      res.status(401).json({ errors: user.errors }); // mostra o erro
+      return;
     }
+    console.log("Excluiu");
+    return res.status(200).json({ success: "Conta excluida com sucesso"});
+  } catch (e) {
+    return res.status(400).json({ errors: [e] });
+  }
 };
