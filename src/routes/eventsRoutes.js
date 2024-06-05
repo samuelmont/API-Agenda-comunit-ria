@@ -4,11 +4,13 @@ const router = express.Router();
 const loginRequired = require("../middleware/loginRequired");
 const eventController = require("../controller/eventController.js");
 
-router.get('/', eventController.getEvents); // Pegar todos eventos
-// router.get('/:id', eventControler.getEvent); // Pegar um evento
-// router.post('/enter', loginRequired, eventControler.enterEvent); //  Entrar em um evento
-router.post('/create', loginRequired, eventController.createEvent); // Criar evento
-// router.put('/update', loginRequired, eventControler.updateEvents); // Atualizar evento
-// router.delete('/delete', loginRequired, eventControler.deleteEvents); // Excluir evento
+router.get('/', eventController.getAll);                                      // Pega todos
+router.post('/one', eventController.getOne);                                  // Pega um
+router.post('/onemine', loginRequired, eventController.getMyOne);             // Pega um próprio
+router.post('/allmine', loginRequired, eventController.getAllMine);           // Pega todos próprios
+router.post('/enter', loginRequired, eventController.enter);                  // Entras
+router.post('/create', loginRequired, eventController.create);                // Cria
+router.put('/update', loginRequired, eventController.update);                 // Atualiza
+router.delete('/delete', loginRequired, eventController.delete);              // Apaga
 
 module.exports = router;

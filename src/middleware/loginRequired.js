@@ -17,10 +17,7 @@ const loginRequired = async (req, res, next) => {
     const user = new User({ id: id });
     await user.checkById();
 
-    if (user.errors.length > 0) {
-      res.status(401).json({ errors: user.errors }); // Retorna os erros
-      return;
-    }
+    if (user.errors.length > 0) return res.status(401).json({ errors: user.errors }); // Retorna os erros
 
     req.userId = id;
     req.userEmail = email;
