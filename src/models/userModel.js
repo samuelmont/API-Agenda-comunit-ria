@@ -41,6 +41,7 @@ class User {
 
   async register() {
     this.validate();
+
     if (this.errors.length > 0) return;   // retorna se o tamanho do erro for maior que 0
 
     await this.userExists();
