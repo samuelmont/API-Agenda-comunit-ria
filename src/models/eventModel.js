@@ -12,6 +12,7 @@ const EventSchema = new Schema({
   date: { type: String, required: true },
   quantity_tickets: { type: String, required: true },
   participants: [{ idParticipant: { type: String, required: true, default: "" } }],
+  file: { type: String, required: true, default: '' },
   owner_id: { type: String, required: true }
 });
 
@@ -59,18 +60,7 @@ class Event {
   async create() {
     this.validate();
     if (this.errors.length > 0) return;
-    this.event = await EventModel.create(this.body);
-    if (!this.event) return this.errors.push('Erro de conexão');
-  }
-
-  async update() {
-    this.validate();
-    if (this.errors.length > 0) return;
-    this.event = await EventModel.findById(this.body.id);
-    if (!this.event) return this.errors.push('Esse evento não existe');
-    if (this.event.owner_id != this.body.userId) return this.errors.push('Você não pode alterar esse evento')
-    this.event = await EventModel.updateOne({ _id: this.body.id },
-      {
+    this.event = await EventModel.create({
         name: this.body.name,
         type: this.body.type,
         description: this.body.description,
@@ -80,6 +70,29 @@ class Event {
         contact_number: this.body.contact_number,
         date: this.body.date,
         quantity_tickets: this.body.quantity_tickets,
+        file: this.body.file,
+        owner_id: this.body.owner_id
+      });
+      if (!this.event) return this.errors.push('Erro de conexão');
+  }
+
+  async update() {
+    this.validate();
+    if (this.errors.length > 0) return;
+    this.event = await EventModel.findById(this.body.id);
+    if (!this.event) return this.errors.push('Esse evento não existe');
+    if (this.event.owner_id != this.body.userId) return this.errors.push('Você não pode alterar esse evento')
+    this.event = await EventModel.updateOne({ _id: this.body.id },{
+        name: this.body.name,
+        type: this.body.type,
+        description: this.body.description,
+        requisites: this.body.requisites,
+        cep: this.body.cep,
+        place_number: this.body.place_number,
+        contact_number: this.body.contact_number,
+        date: this.body.date,
+        quantity_tickets: this.body.quantity_tickets,
+        file: this.body.file,
         participants: this.body.participants
       });
     if (!this.event) return this.errors.push('Erro de conexão');
@@ -97,6 +110,8 @@ class Event {
   validate() {
     this.validateContactNumber(); // valida numero de telefone
     this.validateCep(); // Valida Cep
+
+    if (!this.body.file) return this.errors.push('É obrigatório ter uma imagem');
   }
 
   validateCep() {
@@ -106,6 +121,8 @@ class Event {
   }
 
   validateContactNumber() {
+    if (!this.body.contact_number) return this.errors.push('É obrigatório ter telefone');
+
     const telefone = this.body.contact_number.replace(/\D/g, '');
 
     if (!(telefone.length >= 10 && telefone.length <= 11))

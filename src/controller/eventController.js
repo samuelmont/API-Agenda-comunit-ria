@@ -78,6 +78,8 @@ exports.enter = async (req, res) => { // Entra no evento
 
 exports.create = async (req, res) => { // Cria evento
   try {
+    console.log(req.file.path)
+    req.body.file = req.file.path;
     req.body.owner_id = req.userId;
     const events = new Event(req.body);
     await events.create();
@@ -93,6 +95,8 @@ exports.create = async (req, res) => { // Cria evento
 
 exports.update = async (req, res) => { // Atualiza evento
   try {
+    console.log(req.file.path)
+    req.body.file = req.file.path;
     req.body.userId = req.userId;
     const events = new Event(req.body);
     await events.update();
