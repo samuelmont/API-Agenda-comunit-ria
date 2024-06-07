@@ -2,11 +2,13 @@ require('dotenv').config();
 require('./db.js');
 const express = require('express');
 const app = express();
+const cors = require('cors')
 const path = require('path');
 const bodyParser = require('body-parser');
 const userRouter = require('./src/routes/userRoutes.js');
 const eventRouter = require('./src/routes/eventsRoutes.js');
 
+app.use(cors())
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
