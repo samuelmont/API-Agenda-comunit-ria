@@ -103,11 +103,8 @@ class User {
   validate() {
     this.cleanUp();
 
-    if(this.body.contact_number) this.validateContactNumber(); // CHECKAR SE TA FUNFANDO ------------------------
-    // Validação
-    // O e-mail precisa ser valido
+    if(this.body.contact_number) this.validateContactNumber();
     if (!validator.isEmail(this.body.email)) this.errors.push('E-mail inválido');
-    // A senha precisa ter entre 3 e 50 caracteres
     if (this.body.password.length < 3 || this.body.password.length > 50) {
       this.errors.push('A senha precisa ter entre 3 e 50 caracteres');
     }

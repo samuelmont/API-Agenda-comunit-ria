@@ -20,6 +20,8 @@ ver se o usuário está logado;
 
 `Validator` para fazer validação de email e outros paramentos;
 
+`Multer` para receber e guardar as imagens localmente;
+
 ## Instalar
     npm i
 

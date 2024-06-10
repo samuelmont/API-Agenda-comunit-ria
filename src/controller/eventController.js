@@ -1,7 +1,5 @@
 require("../models/eventModel.js");
-const e = require("express");
 const Event = require("../models/eventModel");
-const User = require('../models/userModel');
 
 exports.getAll = async (req, res) => { // Mostra todos eventos
   try {
@@ -78,7 +76,6 @@ exports.enter = async (req, res) => { // Entra no evento
 
 exports.create = async (req, res) => { // Cria evento
   try {
-    console.log(req.file.path)
     req.body.file = req.file.path;
     req.body.owner_id = req.userId;
     const events = new Event(req.body);
@@ -89,13 +86,13 @@ exports.create = async (req, res) => { // Cria evento
     console.log("Criou");
     return res.status(201).json({ events: events.event });
   } catch (e) {
+    console.log(e)
     return res.status(500).json({ errors: [e] });
   }
 };
 
 exports.update = async (req, res) => { // Atualiza evento
   try {
-    console.log(req.file.path)
     req.body.file = req.file.path;
     req.body.userId = req.userId;
     const events = new Event(req.body);

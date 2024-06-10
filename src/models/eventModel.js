@@ -27,7 +27,7 @@ class Event {
 
   async getAll() {
     this.event = await EventModel.find();
-    this.event.forEach((e) => { // Essa rota não terá acesso aos participantes
+    this.event.forEach((e) => { // Essa rota não terá acesso aos participantes nem ao id do evento
       e.participants = [];
       e.owner_id = "";
     })
