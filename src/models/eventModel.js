@@ -35,7 +35,7 @@ class Event {
   }
 
   async getAllMine() {
-    this.event = await EventModel.findOne({ owner_id: this.body.userId });
+    this.event = await EventModel.find({ owner_id: this.body.userId });
     if (!this.event) return this.errors.push('Você não possui nenhum evento no momento');
   }
 
