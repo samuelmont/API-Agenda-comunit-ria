@@ -74,7 +74,7 @@ class User {
 
     this.user = await UserModel.findByIdAndUpdate(idToken,
       {
-        nome: this.body.nome,
+        name: this.body.name,
         email: this.body.email,
         password: this.body.password,
         contact_number: this.body.contact_number
@@ -90,9 +90,9 @@ class User {
     this.user = await UserModel.deleteMany({ _id: this.body.id});
   }
 
-  async checkById() {
-    this.user = await UserModel.findById(this.body.id);
-    if (!this.user) this.errors.push('Esse usuário não existe');
+  async loginRequired() {
+    this.user = await UserModel.findOne({ "_id": this.body.id, "email": this.body.email });
+    if (!this.user) this.errors.push('Você precisa logar para fazer essa ação');
   }
 
   async userExists() {
