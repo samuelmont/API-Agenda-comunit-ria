@@ -53,6 +53,15 @@ class Event {
   }
 
   async enter() {
+    this.event = await EventModel.findById(this.body.id);
+    if (!this.event) return this.errors.push('Esse evento não está mais disponivel');
+    if (this.event.owner_id == this.body.userId) return this.errors.push('Você não pode participar do próprio evento');
+    this.event.participants.forEach((e) => {
+      if (e.idParticipant == this.body.userId) {
+        return this.errors.push('Você ja está nesse evento');
+      };
+    });
+
     this.event = await EventModel.updateOne({ _id: this.body.id }, { $push: { participants: { idParticipant: this.body.userId } } })
     if (!this.event) return this.errors.push('Esse evento não está mais disponivel');
   }
