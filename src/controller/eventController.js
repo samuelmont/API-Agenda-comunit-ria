@@ -86,7 +86,6 @@ exports.create = async (req, res) => { // Cria evento
     console.log("Criou");
     return res.status(201).json({ events: events.event });
   } catch (e) {
-    console.log(e)
     return res.status(500).json({ errors: [e] });
   }
 };
