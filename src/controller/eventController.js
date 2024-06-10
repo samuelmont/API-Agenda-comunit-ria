@@ -68,7 +68,7 @@ exports.enter = async (req, res) => { // Entra no evento
     if (events.errors.length > 0) return res.status(401).json({ errors: events.errors });
 
     console.log("Entrou");
-    return res.status(201).json({ events: events.event });
+    return res.status(201).json({ success: "Você esta participando do evento" });
   } catch (e) {
     return res.status(500).json({ errors: [e] });
   }
@@ -115,7 +115,7 @@ exports.delete = async (req, res) => { // Apaga evento
     if (events.errors.length > 0) return res.status(401).json({ errors: events.errors });
 
     console.log("Apagou");
-    return res.status(201).json({ events: events.event });
+    return res.status(201).json({ success: "O seu evento foi apagado com sucesso" });
   } catch (e) {
     return res.status(500).json({ errors: [e] });
   }
